@@ -11,6 +11,16 @@ An Android application demonstrating how implicit intents open web pages, find l
 - **Input validation** — reports empty fields, invalid website addresses, and missing compatible applications.
 - **Scrollable layout** — keeps the form accessible on smaller screens and when the keyboard is visible.
 
+## Posnetki zaslona
+
+Dejanski posnetki aplikacije, zajeti na emulatorju **Pixel_10**.
+
+| Glavni zaslon | Deljenje besedila | Prejeta povezava |
+| --- | --- | --- |
+| <img src="docs/screenshots/main-screen.png" alt="Glavni zaslon s tremi vnosnimi polji in gumbi" width="250"> | <img src="docs/screenshots/share-text.png" alt="Sistemsko okno za deljenje vnesenega besedila" width="250"> | <img src="docs/screenshots/received-link.png" alt="Prikaz prejete povezave developer.android.com" width="250"> |
+
+Prikaz prejete povezave je bil preizkušen z neposrednim zagonom aktivnosti z akcijo `VIEW` in podatkovnim URI-jem. Samodejno odpiranje spletnih povezav v aplikaciji je odvisno od nastavitev Androida.
+
 ## Technologies
 
 - Java
@@ -98,4 +108,81 @@ The app does not request location access: it passes the entered search text to a
 
 ## Validation
 
-The debug build (`assembleDebug`) and Android Lint (`lintDebug`) completed successfully during development. Interactive testing on an emulator or physical device remains to be completed.
+The debug build (`assembleDebug`) and Android Lint (`lintDebug`) completed successfully during development. The main screen, Android share chooser and received-URI display were also checked on the Pixel_10 emulator. Opening websites in a browser and searching in a map application have not yet been interactively verified.
+
+## Odgovori na vprašanja (naloga 6)
+
+### 1. Kaj najbolje opiše implicitni namen?
+
+**Pravilen odgovor: b.** Določimo dejanje, ki ga želimo izvesti, ne določimo pa točno določene aktivnosti ali aplikacije. Android poišče ustrezne prejemnike glede na dejanje, podatke in filtre namenov.
+
+### 2. Katero akcijo uporabimo za spletno stran in lokacijo na zemljevidu?
+
+**Pravilen odgovor: c — `Intent.ACTION_VIEW`.** Pri spletni strani podamo spletni URI, pri lokaciji pa URI s shemo `geo`.
+
+### 3. Kateri zapis pravilno pretvori lokacijo v URI?
+
+**Pravilen odgovor: b — `Uri.parse("geo:0,0?q=" + loc)`.** V aplikaciji lokacijo dodatno kodiramo, da pravilno obravnavamo presledke, šumnike in posebne znake:
+
+```java
+Uri uri = Uri.parse("geo:0,0?q=" + Uri.encode(loc));
+```
+
+### 4. Zakaj uporabimo `resolveActivity(getPackageManager())`?
+
+**Pravilen odgovor: a.** Preverimo, ali sistem najde aktivnost, ki lahko obdeluje podani implicitni namen. Če je rezultat `null`, uporabniku prikažemo obvestilo namesto zagona aktivnosti.
+
+Pri Androidu 11 in novejših moramo pri takšnem preverjanju upoštevati omejeno vidnost aplikacij. Zato projekt v manifestu vključuje ustrezne vnose `<queries>`.
+
+### 5. Kateri MIME tip uporabimo za deljenje besedila?
+
+**Pravilen odgovor: b — `text/plain`.** Označuje navadno besedilo.
+
+### 6. Kateri razred poenostavi izdelavo namena za deljenje?
+
+**Pravilen odgovor: a — `ShareCompat.IntentBuilder`.** Z njim nastavimo vrsto vsebine in besedilo ter odpremo sistemsko okno za izbiro aplikacije:
+
+```java
+new ShareCompat.IntentBuilder(this)
+        .setType("text/plain")
+        .setText(text)
+        .startChooser();
+```
+
+### 7. Kaj mora vsebovati filter za sprejem povezave do `developer.android.com`?
+
+**Pravilen odgovor: a.** Potrebujemo akcijo `VIEW`, kategoriji `DEFAULT` in `BROWSABLE` ter podatkovni filter s shemo `http` in gostiteljem `developer.android.com`. Projekt podpira tudi shemo `https`:
+
+```xml
+<intent-filter android:autoVerify="false">
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <category android:name="android.intent.category.BROWSABLE" />
+    <data android:scheme="http" />
+    <data android:scheme="https" />
+    <data android:host="developer.android.com" />
+</intent-filter>
+```
+
+Ta filter določa sprejem povezav. Vnosi `<queries>` imajo drugo nalogo: omogočajo preverjanje ustreznih zunanjih aplikacij. Ker domena ni preverjena, filter sam ne zagotavlja samodejnega odpiranja povezav v tej aplikaciji.
+
+### 8. Kako pridobimo in prikažemo prejeti URI?
+
+**Pravilen odgovor: a.** Z `getIntent()` pridobimo vhodni namen, z `getData()` preberemo URI in ga prikažemo v gradniku `TextView`. Preverimo tudi, ali je URI prisoten:
+
+```java
+Intent intent = getIntent();
+Uri uri = intent.getData();
+if (Intent.ACTION_VIEW.equals(intent.getAction()) && uri != null) {
+    TextView receivedUri = findViewById(R.id.received_uri);
+    receivedUri.setText(uri.toString());
+    receivedUri.setVisibility(View.VISIBLE);
+}
+```
+
+### Viri
+
+- Učni list: *Razvoj mobilnih aplikacij – Naloga 6: Delo z implicitnimi nameni*.
+- [Android Developers: Intents and intent filters](https://developer.android.com/guide/components/intents-filters)
+- [Android Developers: ShareCompat.IntentBuilder](https://developer.android.com/reference/androidx/core/app/ShareCompat.IntentBuilder)
+- [Android Developers: Package visibility use cases](https://developer.android.com/training/package-visibility/use-cases)
