@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Implicit Intents</string>
+    <string name="website_hint">Spletni naslov</string>
+    <string name="location_hint">Lokacija ali naslov</string>
+    <string name="share_hint">Besedilo za deljenje</string>
+    <string name="open_website">Open Website</string>
+    <string name="open_location">Open Location</string>
+    <string name="share_text">Share This Text</string>
+    <string name="website_default"></string>
+    <string name="location_default"></string>
+    <string name="share_default"></string>
+    <string name="required_input">Najprej izpolni to polje.</string>
+    <string name="invalid_website">Vnesi veljaven spletni naslov (http ali https).</string>
+    <string name="no_browser">Na napravi ni aplikacije za odpiranje spletnih strani.</string>
+    <string name="no_maps">Na napravi ni aplikacije za prikaz zemljevida.</string>
+    <string name="no_share_app">Na napravi ni aplikacije za deljenje besedila.</string>
+    <string name="share_chooser">Deli besedilo z aplikacijo</string>
+    <string name="received_link">Prejeta povezava:\n%1$s</string>
+</resources>

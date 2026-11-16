@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <EditText
+                android:id="@+id/website_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:importantForAutofill="no"
+                android:minHeight="48dp"
+                android:hint="@string/website_hint"
+                android:inputType="textUri"
+                android:singleLine="true"
+                android:text="@string/website_default" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="openWebsite"
+                android:text="@string/open_website" />
+
+            <EditText
+                android:id="@+id/location_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:importantForAutofill="no"
+                android:minHeight="48dp"
+                android:hint="@string/location_hint"
+                android:inputType="textPostalAddress"
+                android:singleLine="true"
+                android:text="@string/location_default" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="openLocation"
+                android:text="@string/open_location" />
+
+            <EditText
+                android:id="@+id/share_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:importantForAutofill="no"
+                android:minHeight="48dp"
+                android:gravity="top|start"
+                android:hint="@string/share_hint"
+                android:inputType="textCapSentences|textMultiLine"
+                android:text="@string/share_default" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="shareText"
+                android:text="@string/share_text" />
+
+            <TextView
+                android:id="@+id/received_uri"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:textIsSelectable="true"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
